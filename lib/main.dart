@@ -75,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
       isVisible = true;
       current = 0;
-      maxLength = 16;
+      maxLength = 19;
       positions = [
         Offset(img_x+33, img_y+75),
         Offset(img_x+13, img_y+img_height-50),
@@ -100,47 +100,63 @@ class _MyHomePageState extends State<MyHomePage> {
   {
     if (RegExp(r'^3[47]').hasMatch(number))
       {
-        bank = "assets/amex.png";
+        setState(() {
+          bank = "assets/amex.png";
+        });
       }
 
     else if (RegExp(r'^6011').hasMatch(number) ||
         RegExp(r'^64[4-9]').hasMatch(number))
     {
-      bank = "assets/discover.png";
+      setState(() {
+        bank = "assets/discover.png";
+      });
     }
 
     else if (RegExp(r'^36').hasMatch(number))
     {
-      bank = "assets/dinersclub.png";
+      setState(() {
+        bank = "assets/dinersclub.png";
+      });
     }
 
     else if (RegExp(r'^3528').hasMatch(number) ||
         RegExp(r'^3529').hasMatch(number) ||
         RegExp(r'^35[3-8][0-9]').hasMatch(number))
     {
-      bank = "assets/jcb.png";
+      setState(() {
+        bank = "assets/jcb.png";
+      });
     }
 
     else if (RegExp(r'^5[15]').hasMatch(number) ||
         RegExp(r'(?:\d[ -]*){4}(?:22[2-9]\d|23\d\d|24\d\d|25\d\d|26\d\d|27[01]\d)$').hasMatch(number))
     {
-      bank = "assets/mastercard.png";
+      setState(() {
+        bank = "assets/mastercard.png";
+      });
     }
 
     else if (RegExp(r'^65').hasMatch(number) ||
         RegExp(r'^9792').hasMatch(number))
     {
-      bank = "assets/troy.png";
+      setState(() {
+        bank = "assets/troy.png";
+      });
     }
 
     else if (RegExp(r'62[0-9\s]*$').hasMatch(number))
     {
-      bank = "assets/unionpay.png";
+      setState(() {
+        bank = "assets/unionpay.png";
+      });
     }
 
     else
     {
-      bank = "assets/visa.png";
+      setState(() {
+        bank = "assets/visa.png";
+      });
     }
   }
 
@@ -173,63 +189,6 @@ class _MyHomePageState extends State<MyHomePage> {
         );
       },
     );
-  }
-
-  String format(String text, String bank) {
-    String res = "";
-    if (bank != "assets/amex.png"){
-      if (text.length < 16)
-        {
-          for (int i=0; i<text.length; i++){
-            res += text[i];
-            if (i%4 == 3) { res += " ";}
-          }
-          for (int i=text.length; i<16; i++){
-            res += "#";
-            if (res.length == 4 || res.length == 9 || res.length == 14) { res += " ";}
-          }
-        }
-
-      else
-      {
-        text = text.substring(0, 16);
-        for (int i=0; i<text.length; i++){
-          res += text[i];
-          if (i%4 == 3) { res += " ";}
-        }
-        for (int i=text.length; i<16; i++){
-          res += "#";
-          if (res.length == 4 || res.length == 9 || res.length == 14) { res += " ";}
-        }
-      }
-    }
-
-    else {
-      if (text.length <= 15)
-        {
-          for (int i=0; i<text.length; i++){
-            res += text[i];
-            if (i == 3 || i == 9) { res += " ";}
-          }
-          for (int i=text.length; i<15; i++){
-            res += "#";
-            if (res.length == 4 || res.length == 11) { res += " ";}
-          }
-        }
-      else
-      {
-        text = text.substring(0, 15);
-        for (int i=0; i<text.length; i++){
-          res += text[i];
-          if (i == 3 || i == 9) { res += " ";}
-        }
-        for (int i=text.length; i<15; i++){
-          res += "#";
-          if (res.length == 4 || res.length == 11) { res += " ";}
-        }
-      }
-    }
-    return res;
   }
 
   @override
@@ -267,7 +226,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     height: 50,
                     child: TextFormField(
                       inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'^[0-9]*$')),
+                        FilteringTextInputFormatter.digitsOnly,
                         MaskFormatter(bank: bank)
                       ],
                       onTap: () {
@@ -280,7 +239,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         setState(() {
                           if (text.length <= maxLength)
                             {
-                              //number = format(text);
                               number = text;
                             }
                           updBank(number: number);

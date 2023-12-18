@@ -1,31 +1,45 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class MaskFormatter extends TextInputFormatter {
   final String bank;
+
   MaskFormatter({required this.bank});
 
   @override
   TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue,
-      TextEditingValue newValue
-  )
-  {
-    final int newTextLength = newValue.text.length;
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    final String mask = getMaskForBank();
     int selectionIndex = newValue.selection.end;
     int usedSubstringIndex = 0;
     final StringBuffer newText = StringBuffer();
-    if (newTextLength == 4 || newTextLength == 9 || newTextLength == 14) {
-      newText.write(' ');
-      if (newValue.selection.end >= 1)
-        selectionIndex++;
+
+    for (int i = 0; i < newValue.text.length; i++) {
+      if (mask.length > i && mask[i] == '#') {
+        newText.write(newValue.text[i]);
+        if (selectionIndex > i) {
+          selectionIndex++;
+        }
+      } else if (mask.length > i && mask[i] == ' ') {
+        newText.write(' ');
+        if (selectionIndex > i) {
+          selectionIndex++;
+        }
+      }
     }
-    // Dump the rest.
-    if (newTextLength >= usedSubstringIndex)
-      newText.write(newValue.text.substring(usedSubstringIndex));
+
     return TextEditingValue(
       text: newText.toString(),
       selection: TextSelection.collapsed(offset: selectionIndex),
     );
   }
+
+  String getMaskForBank() {
+    switch (bank) {
+      case 'assets/amex.png':
+        return '#### ###### #####';
+      default:
+        return '#### #### #### ####';
+    }
+  }
 }
+
